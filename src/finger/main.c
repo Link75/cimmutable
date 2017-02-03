@@ -11,6 +11,12 @@
 #define MAX_ADD 10
 #define MAX_DELETE 2
 
+void simul(){
+
+   simulation_add(300,20,100,4000);
+}
+
+
 void ft_test() {
     // === ft_add ===
     int data[2*MAX_ADD];
@@ -195,8 +201,9 @@ void vector_test() {
 
 int main(int argc, char **argv)
 {
-    ft_test();
-    vector_test();
+    /* ft_test(); */
+    /* vector_test(); */
+  simul();
     
     return 0;
 }
