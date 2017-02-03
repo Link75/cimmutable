@@ -695,8 +695,8 @@ void node_unref(node* n) {
     
     if (n->ref_count == 0) {
         if (n->type == DATA_TYPE) {
-	  puts("data removed");
-	  node_display(n);
+	  //puts("data removed");
+	  //node_display(n);
             free(n->true_node);
             free(n);
         }
@@ -1265,7 +1265,7 @@ affix* ft_to_affix(ft* fgt, int preorsuf) {
         return NULL;
     
     affix* res = malloc(sizeof(affix));
-    
+    res->size = 0;
     if (preorsuf == 0) {
         // We make a prefix
         if (fgt->type == SINGLE_TYPE) {
@@ -1673,26 +1673,37 @@ void simulation_add(int density_each_point, int shift, int starting_size, int fi
   /*open the file */
   char filename[100];
   FILE* f;
-  sprintf(filename,"add_density:%d_shift:%d_start:%d_fin:%d",density_each_point,shift,starting_size,finishing_size);
+  sprintf(filename,"concat_density:%d_shift:%d_start:%d_fin:%d",density_each_point,shift,starting_size,finishing_size);
   f = fopen(filename,"w+");
   /* initializing data*/
   int data[finishing_size];
-  for(int i=0;i<finishing_size;i++)
-    data[i]=1;
+    int data2[finishing_size];
 
+  for(int i=0;i<finishing_size;i++){
+    data[i]=1;
+    data2[i]=3;
+  }
   ft* fin[density_each_point];
+  ft* fin2[density_each_point];
+
+  view res;
   ft*tmp=NULL;
   for(int i=starting_size;i<=finishing_size;i=i+shift){
     average = 0;
     for(int j=0;j<density_each_point;j++){
       
       fin[j]=ft_generator(i,data);
+      fin2[j]=ft_generator(i,data2);
+
       clock_t begin = clock();
-      tmp = ft_add(&data[0],fin[j],0);
+      tmp = ft_concat(fin[j],fin2[j]);
        clock_t end = clock();
      time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
      average = average + time_spent;
      ft_unref(tmp);
+     ft_unref(fin[j]);
+     ft_unref(fin2[j]);
+
       
     }
     average = average/density_each_point;
